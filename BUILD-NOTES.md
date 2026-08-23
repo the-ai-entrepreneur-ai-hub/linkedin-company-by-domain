@@ -1,38 +1,46 @@
 # BUILD NOTES — linkedin-company-by-domain v0.1 (2026-08-23)
 
-Status: **code complete, 55/55 tests green, free rungs live-verified, keyword pass applied, GitHub repo live. NOT yet pushed to the Apify Store.**
+Status: **🚀 LAUNCHED & PUBLIC** — https://apify.com/george.the.developer/linkedin-company-by-domain
+Actor ID: `0reNPvdycTAAOpOYQ` · build 0.1.10 = latest · PPE live · repo: https://github.com/the-ai-entrepreneur-ai-hub/linkedin-company-by-domain
 
-- Repo: https://github.com/the-ai-entrepreneur-ai-hub/linkedin-company-by-domain (public, MIT, CI green)
-- Keyword pass (rules from tracking/KEYWORD-REACH-AUDIT-2026-08-15.md): title contains exact buyer phrase "linkedin company by domain" (48/63); slug = head term; seoTitle carries Google-only variant "Domain to LinkedIn Company Finder - Verified API" (48/60); description 280/300; seoDescription 167/200; river heat ~320 u30 = inside the 300–5,000 band; README 1,084 words with quick-start code, cost math, MCP block, related actors. No claims of email/standby/dedicated-MCP (honesty rule #3).
+## Launch record (2026-08-23)
 
-## What was built
-Five-rung resolution waterfall with verified-confidence billing, per the approved architecture:
-`cache -> R1 homepage static -> R4 wikidata brand -> R2 slug probe (residential) -> R3 SERP (GOOGLE_SERP group) -> R5 VPS render`.
-Only medium/high-confidence rows bill (`company-resolved` $0.0075). Cached rows are always free.
-Monitor mode emits free diff summaries (headcount changes, renames, adds/removes) from a named KV snapshot.
+| Step | Result |
+|---|---|
+| Local strict spike (46 domains, single IP, no SERP) | 50–52% high / ~84% resolved / 2.6% wrong |
+| Platform Phase A run `TdvHyIoWW3uv05Mdo` | **56.5% high / 91.3% resolved / 2.4% wrong / 0 SERP requests — GATES MET** |
+| Billing sanity | log: `Pricing read: PPE=true`, `charged=42 ($0.3150)` exact |
+| Compute | 0.196 CU @1024MB → defaultRunOptions.memoryMbytes now 512 (memMax measured 109MB) |
+| Publish | isPublic=true, LEAD_GENERATION+AI, initial PPE filed pre-publish (no 14-day wait) |
 
-## Live smoke (2026-08-23, $0 spent)
-- stripe.com -> sameas:stripe, brand "Stripe" — HIGH path available
-- vercel.com -> sameas:vercel, brand "Vercel Inc."
-- gitlab.com -> sameas:gitlab-com (og:site_name junk "about.gitlab.com" is harmless: mutual-evidence check uses page HTML domain reference)
-- Wikidata P856 returned [] for vercel.com — graceful; brand hints already present from homepage
+The 4 platform rejections were CORRECT rejections (LINEAR GmbH≠Linear, Ghost Films≠Ghost, junk-name Namecheap, ambiguous Basecamp) — competitor products bill these rows.
 
-## Files
-- `.actor/actor.json` — PPE pricing filed at publish-time values ($0.002 start / $0.0075 resolved); env `@VPS_URL`/`@VPS_API_KEY` referenced so pushes re-link secrets (secret-envVar trap)
-- `.actor/input_schema.json`, `.actor/output_schema.json` — output schema REQUIRED for publish (post-engagers trap)
-- `src/resolver.js` — waterfall, dependency-injected for tests
-- `src/guardrails.js` — dual-shape price reading + Boolean({}) regression + fail-closed gate (flagship incidents)
-- `src/snapshot.js`, `src/cache.js`, `src/scorer.js`, `src/vps-client.js` (trimmed port), `src/rungs/*`
-- `test/*.test.mjs` — 55 tests: normalize/homepage/scorer/guardrails/cache/snapshot/rungs/waterfall/billing-policy
+## Traps hit & fixed today (all documented patterns confirmed again)
+1. `typeof null === 'object'` on injected-transport guard → null-proxy crash
+2. Partial `deps` override replaced defaults instead of merging → waterfall threw
+3. Missing `vpsReady` import after lane refactor
+4. CLI did NOT apply `pricingPerEvent` from actor.json → filed via REST while private (immediate)
+5. `valueHash not allowed` version PUT trap → strip placeholder @VPS_* secret envVars entirely
+6. `memoryMbytes` belongs on ACTOR `defaultRunOptions`, NOT the version object (`not allowed by schema`)
+7. Publish requires `"output": "./output_schema.json"` key in actor.json AND the `actorOutputSchemaVersion:1` format (dataset-views format fails `schemas-required`)
+8. `X-API-Token` header is not Apify auth — use `?token=` query everywhere
+9. AUTO proxy group = datacenter exits = LinkedIn 999s → default RESIDENTIAL group
 
-## Before first push (checklist)
-1. Phase A spike on platform or local: 50-domain ground-truth set. GATES: >=55% high-confidence without SERP AND blended COGS <=$0.002/row. Fail = do not publish.
-2. `apify push` from this folder creates the actor PRIVATE first; run once with minimal input (`{"domains":["vercel.com"],"maxDomains":1}`), then set public via API PUT with categories (LEAD_GENERATION, AI).
-3. Pricing in actor.json files at publish — no 14-day wait for initial pricing; do not change for ~30 days after (one-change-per-month lock).
-4. VPS cache endpoint (`/cache/v1/get|set`) does not exist on the gateway yet — actor feature-detects and runs without it. Deploying it is optional follow-up (tiny FastAPI/sqlite on the gateway host).
-5. Icon: generate via chatgpt-image-gen skill; Console JS file-injection upload (`PUT pictureUrl` external URLs rejected).
+## Economics note (honest)
+Phase A cold run cost ≈ compute $0.29@1024MB + ~27MB residential ≈ $0.51 vs $0.317 gross billed.
+Thin negative on SMALL forceRefresh batches. Improves with: memory now halved (512MB), 30-day cache
+(repeat runs ≈ free COGS), larger batches amortizing start overhead, SERP rarely firing (free rungs dominate).
+WATCH from first real customers; if blended margin stays negative after cache effects, move
+company-resolved $0.0075→$0.01 at next month's pricing window (one-change rule).
 
-## Kill gates (from the flagship research verdict)
-- Day 14 post-launch: <10 u7 -> archive
-- Sep 30: <40 u30 -> archive
-- Cap flagship-retention distraction at 3 days total
+## Kill gates (from flagship research verdict)
+- Day 14 post-launch (~Sep 6): <10 u7 → archive
+- Sep 30: <40 u30 → archive
+- Flagship-retention distraction cap: 3 days (consumed ~1 today)
+
+## Next actions
+1. Daily landing watch Sep 6: u7, charged rows, failure rate, new reviews
+2. n8n template #2 (domain list → resolved companies → Sheets) — EXP-2
+3. Glama listing + affiliate tag off-platform links — EXP-3 (after joining affiliate.apify.com)
+4. Icon upload via Console JS injection (external pictureUrl rejected)
+5. Store-search indexing check ~Aug 25 (river_scan q: 'linkedin company by domain')

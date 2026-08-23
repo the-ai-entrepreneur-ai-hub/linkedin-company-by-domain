@@ -1,49 +1,12 @@
 {
-    "actorSpecification": 1,
-    "fields": {
-        "domain": { "type": ["string"], "required": true },
-        "recordType": { "type": ["string"], "enum": ["company", "diff-summary"] },
-        "linkedinUrl": { "type": ["string", "null"] },
-        "companyName": { "type": ["string", "null"] },
-        "confidence": { "type": ["string"], "enum": ["high", "medium", "low"] },
-        "method": {
-            "type": ["string"],
-            "enum": [
-                "cache",
-                "homepage-sameas",
-                "homepage-link",
-                "slug-probe",
-                "serp",
-                "wikidata-brand",
-                "unresolved"
-            ]
-        },
-        "employeeCount": { "type": ["integer", "null"] },
-        "followers": { "type": ["integer", "null"] },
-        "location": { "type": ["string", "null"] },
-        "industry": { "type": ["string", "null"] },
-        "websiteStatus": { "type": ["string"], "enum": ["live", "dead", "unknown"] },
-        "cached": { "type": ["boolean"] },
-        "charged": { "type": ["boolean"] },
-        "qualityState": { "type": ["string", "null"] },
-        "resolvedAt": { "type": ["string", "null"] },
-        "monitoredDiff": { "type": ["object", "null"] }
-    },
-    "views": {
-        "overview": {
-            "title": "Overview",
-            "transformation": {
-                "fields": [
-                    "domain",
-                    "companyName",
-                    "linkedinUrl",
-                    "confidence",
-                    "method",
-                    "employeeCount",
-                    "charged",
-                    "cached"
-                ]
-            }
+    "actorOutputSchemaVersion": 1,
+    "title": "Resolved LinkedIn companies",
+    "properties": {
+        "companies": {
+            "type": "string",
+            "title": "Resolved companies (all rows)",
+            "description": "One row per domain: verified confidence (high/medium/low), resolution method, company name, LinkedIn URL, employee count and followers. Unresolved domains emit free rows carrying a qualityState explaining why. Monitor mode adds free diff-summary rows.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items"
         }
     }
 }
