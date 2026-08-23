@@ -89,7 +89,8 @@ Actor.main(async () => {
         proxyConfiguration = await Actor.createProxyConfiguration(
             input.proxyConfiguration && typeof input.proxyConfiguration === 'object'
                 ? { ...input.proxyConfiguration }
-                : { useApifyProxy: true },
+                : // RESIDENTIAL, not AUTO: LinkedIn serves 999s to datacenter exits.
+                  { useApifyProxy: true, groups: ['RESIDENTIAL'] },
         );
     } catch (e) {
         log.warning(`Proxy configuration unavailable (${e.message}); LinkedIn page verification will be limited.`);
