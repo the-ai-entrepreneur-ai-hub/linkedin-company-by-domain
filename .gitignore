@@ -1,0 +1,9 @@
+node_modules/
+storage/
+storage-*/
+.idea/
+.vscode/
+*.log
+.claude/
+_playground/
+.env
