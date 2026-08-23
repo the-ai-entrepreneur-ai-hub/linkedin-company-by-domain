@@ -15,6 +15,20 @@ test('nameSimilarity: exact and prefix tolerance', () => {
     assert.equal(nameSimilarity('Vercel', 'Netflix'), 0);
 });
 
+test('nameSimilarity: compound names match their joined form (Product Hunt vs producthunt)', () => {
+    assert.equal(nameSimilarity('Product Hunt', 'producthunt'), 1);
+    assert.equal(nameSimilarity('producthunt', 'Product Hunt'), 1);
+});
+
+test('slug-probe + compound brand name now reaches medium threshold', () => {
+    const r = scoreCandidate({
+        apex: 'producthunt.com', sld: 'producthunt',
+        brandHints: [],
+        candidate: { evidence: 'slug-probe', reachable: true, pageName: 'Product Hunt', pageHtml: '' },
+    });
+    assert.equal(r.confidence, 'medium');
+});
+
 test('domainTokenMatch: apex or long-enough sld', () => {
     assert.equal(domainTokenMatch('vercel.com', 'vercel', 'Learn more at vercel.com'), true);
     assert.equal(domainTokenMatch('vercel.com', 'vercel', 'https://vercel.com/docs'), true);

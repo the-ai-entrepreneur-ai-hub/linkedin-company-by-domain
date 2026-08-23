@@ -18,7 +18,8 @@ export function tokenize(s) {
     return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').split(' ').filter(Boolean);
 }
 
-/** Token-set similarity 0..1 with prefix tolerance ("gitlab" vs "gitlab com"). */
+/** Token-set similarity 0..1 with prefix tolerance ("gitlab" vs "gitlab com")
+ *  and compound-name tolerance ("Product Hunt" vs "producthunt"). */
 export function nameSimilarity(a, b) {
     const ta = [...new Set(tokenize(a))];
     const tb = [...new Set(tokenize(b))];
@@ -28,7 +29,17 @@ export function nameSimilarity(a, b) {
         if (tb.includes(x)) { hits += 1; continue; }
         if (tb.some((y) => (x.length >= 4 && y.startsWith(x)) || (y.length >= 4 && x.startsWith(y)))) hits += 0.5;
     }
-    return hits / Math.max(ta.length, tb.length);
+    let score = hits / Math.max(ta.length, tb.length);
+    // Compound tolerance: multi-token name joined equals the other side's single token
+    // ("product hunt" -> "producthunt"). Only ever raises toward 1, never lowers.
+    if (score < 1 && ta.length > 1) {
+        const joined = ta.join('');
+        if (tb.includes(joined)) score = Math.max(score, 1);
+    } else if (score < 1 && tb.length > 1) {
+        const joinedB = tb.join('');
+        if (ta.includes(joinedB)) score = Math.max(score, 1);
+    }
+    return score;
 }
 
 export function domainTokenMatch(apex = '', sld = '', text = '') {
