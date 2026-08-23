@@ -1,0 +1,109 @@
+
+1/46 done
+2/46 done
+3/46 done
+4/46 done
+5/46 done
+6/46 done
+7/46 done
+8/46 done
+9/46 done
+10/46 done
+11/46 done
+12/46 done
+13/46 done
+14/46 done
+15/46 done
+16/46 done
+17/46 done
+18/46 done
+19/46 done
+20/46 done
+21/46 done
+22/46 done
+23/46 done
+24/46 done
+25/46 done
+26/46 done
+27/46 done
+28/46 done
+29/46 done
+30/46 done
+31/46 done
+32/46 done
+33/46 done
+34/46 done
+35/46 done
+36/46 done
+37/46 done
+38/46 done
+39/46 done
+40/46 done
+41/46 done
+42/46 done
+43/46 done
+44/46 done
+45/46 done
+46/46 done
+{
+  "total": 46,
+  "high": 23,
+  "medium": 16,
+  "low": 7,
+  "highRate": 0.5,
+  "resolvedRate": 0.848,
+  "wrongCompany": 1,
+  "wrongRateOnResolved": 0.026,
+  "byMethod": {
+    "homepage-sameas": 15,
+    "homepage-link": 8,
+    "unresolved": 7,
+    "slug-probe": 16
+  }
+}
+OK  vercel.com         high    homepage-sameas  Vercel                 https://www.linkedin.com/company/vercel/
+OK  gitlab.com         high    homepage-sameas  GitLab                 https://www.linkedin.com/company/gitlab-com/
+OK  notion.so          high    homepage-link    Notion                 https://www.linkedin.com/company/notionhq/
+OK  stripe.com         high    homepage-sameas  Stripe                 https://www.linkedin.com/company/stripe/
+OK  zapier.com         high    homepage-sameas  Zapier                 https://www.linkedin.com/company/zapier/
+OK  cloudflare.com     high    homepage-sameas  Cloudflare             https://www.linkedin.com/company/cloudflare/
+OK  datadoghq.com      high    homepage-link    Datadog                https://www.linkedin.com/company/datadog/
+OK  figma.com          high    homepage-sameas  Figma                  https://www.linkedin.com/company/figma/
+OK  hubspot.com        high    homepage-sameas  HubSpot                https://www.linkedin.com/company/hubspot/
+OK  asana.com          high    homepage-sameas  Asana                  https://www.linkedin.com/company/asana/
+OK  airtable.com       high    homepage-link    Airtable               https://www.linkedin.com/company/airtable/
+OK  zoom.us            high    homepage-sameas  Zoom                   https://www.linkedin.com/company/zoom/
+OK  slack.com          high    homepage-link    Slack                  https://www.linkedin.com/company/tiny-spec-inc/
+OK  adobe.com          high    homepage-sameas  Adobe                  https://www.linkedin.com/company/adobe/
+..  linear.app         low     unresolved       -                      
+OK  nvidia.com         medium  slug-probe       NVIDIA                 https://www.linkedin.com/company/nvidia/
+OK  dropbox.com        medium  slug-probe       Dropbox                https://www.linkedin.com/company/dropbox/
+OK  spotify.com        medium  slug-probe       Spotify                https://www.linkedin.com/company/spotify/
+OK  discord.com        medium  slug-probe       Discord                https://www.linkedin.com/company/discord/
+OK  pinterest.com      medium  slug-probe       Pinterest              https://www.linkedin.com/company/pinterest/
+OK  atlassian.com      high    homepage-sameas  Atlassian              https://www.linkedin.com/company/atlassian/
+OK  mailchimp.com      high    homepage-link    Intuit Mailchimp       https://www.linkedin.com/company/mailchimp/
+OK  loom.com           high    homepage-sameas  Loom                   https://www.linkedin.com/company/useloom/
+OK  calendly.com       high    homepage-sameas  Calendly               https://www.linkedin.com/company/calendly/
+OK  intercom.com       high    homepage-sameas  Intercom               https://www.linkedin.com/company/intercom/
+OK  instacart.com      medium  slug-probe       Instacart              https://www.linkedin.com/company/instacart/
+OK  canva.com          medium  slug-probe       Canva                  https://www.linkedin.com/company/canva/
+OK  lyft.com           medium  slug-probe       Lyft                   https://www.linkedin.com/company/lyft/
+OK  airbnb.com         medium  slug-probe       Airbnb                 https://www.linkedin.com/company/airbnb/
+OK  doordash.com       medium  slug-probe       DoorDash               https://www.linkedin.com/company/doordash/
+OK  hulu.com           medium  slug-probe       Hulu                   https://www.linkedin.com/company/hulu/
+OK  netflix.com        medium  slug-probe       Netflix                https://www.linkedin.com/company/netflix/
+OK  producthunt.com    medium  slug-probe       Product Hunt           https://www.linkedin.com/company/producthunt/
+..  crunchbase.com     low     unresolved       -                      
+..  ghost.org          low     unresolved       -                      
+..  wix.com            low     unresolved       -                      
+..  webflow.com        low     unresolved       -                      
+OK  squarespace.com    high    homepage-link    Squarespace            https://www.linkedin.com/company/squarespace/
+OK  substack.com       medium  slug-probe       Substack               https://www.linkedin.com/company/substack/
+OK  godaddy.com        medium  slug-probe       GoDaddy                https://www.linkedin.com/company/godaddy/
+OK  digitalocean.com   high    homepage-link    DigitalOcean           https://www.linkedin.com/company/digitalocean/
+..  namecheap.com      low     unresolved       -                      
+OK  twilio.com         high    homepage-sameas  Twilio                 https://www.linkedin.com/company/twilio-inc-/
+..  basecamp.com       low     unresolved       -                      
+BAD sendgrid.com       high    homepage-link    Twilio                 https://www.linkedin.com/company/twilio-inc-/
+OK  vultr.com          medium  slug-probe       Vultr                  https://www.linkedin.com/company/vultr/
