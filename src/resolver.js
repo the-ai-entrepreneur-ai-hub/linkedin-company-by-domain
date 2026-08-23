@@ -48,8 +48,9 @@ export async function resolveDomain({
     serpProxyUrlFor,
     forceRefresh = false,
     useVpsRender = true,
-    deps = DEFAULT_DEPS,
+    deps: depsOverride = {},
 }) {
+    const deps = { ...DEFAULT_DEPS, ...depsOverride };
     const { apex, sld } = domainRecord;
     const stats = { pageFetches: 0, proxyRequests: 0 };
 

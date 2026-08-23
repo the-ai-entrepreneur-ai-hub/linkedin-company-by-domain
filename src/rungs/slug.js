@@ -9,7 +9,7 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import { tlsFetch, crawlPage } from '../vps-client.js';
+import { tlsFetch, crawlPage, vpsReady } from '../vps-client.js';
 
 /** LinkedIn suffixes its titles: "Notion | LinkedIn", "Vercel - Overview | LinkedIn". */
 function cleanTitle(s) {
@@ -95,54 +95,107 @@ export function htmlMentionsDomain(html = '', { apex = '', sld = '' } = {}) {
 }
 
 /**
- * Fetch one LinkedIn company page. Prefers the VPS TLS lane (Chrome fingerprint through
- * residential proxy); falls back to the browser /crawl lane; returns inconclusive otherwise.
+ * Direct fetch through the residential proxy — no VPS required.
+ * Logged-out company pages sometimes serve full HTML to browser-like clients;
+ * when LinkedIn answers 999/authwall this returns blocked:false-ish evidence honestly.
+ */
+async function directResidentialFetch({ url, proxyUrl, timeout = 20 }) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeout * 1000);
+    try {
+        const init = {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                    + '(KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+            },
+            redirect: 'follow',
+            signal: ctrl.signal,
+        };
+        if (proxyUrl) {
+            const { ProxyAgent } = await import('undici');
+            init.dispatcher = new ProxyAgent(proxyUrl);
+        }
+        const res = await fetch(url, init);
+        const html = await res.text();
+        const finalUrl = res.url || '';
+        const blocked = res.status !== 200
+            || /authwall|challenge|captcha|login\?session/i.test(finalUrl)
+            || /<body[^>]*class="[^"]*(authwall|challenge)[^"]*"/i.test(html);
+        return { reachable: Boolean(html) && !blocked && html.length > 500, blocked, html, finalUrl };
+    } catch {
+        return { reachable: false, blocked: true, html: '', finalUrl: '' };
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+/**
+ * Fetch one LinkedIn company page. Lane order:
+ *   1. VPS TLS fingerprint (best) -> 2. VPS browser render -> 3. direct residential fetch.
  * @returns {Promise<{reachable: boolean, blocked: boolean, html: string, name: string, meta: object}>}
  */
 export async function fetchLinkedInCompanyPage({ url, proxyUrl }) {
-    if (!proxyUrl) return { reachable: false, blocked: false, html: '', name: '', meta: {} };
-
-    if (typeof proxyUrl === 'object' && proxyUrl.tlsFetch) {
+    if (proxyUrl && typeof proxyUrl === 'object' && proxyUrl.tlsFetch) {
         // injected transport (tests)
         return proxyUrl.fetch({ url });
     }
 
-    const sessionId = `cbd_${randomUUID().replace(/-/g, '')}`;
-    try {
-        const res = await tlsFetch({
-            url,
-            sessionId,
-            proxy: proxyUrl,
-            headers: { 'Accept-Language': 'en-US,en;q=0.9' },
-            timeout: 20,
-        });
-        const html = res?.body ?? res?.html ?? res?.content ?? '';
-        const blocked = /authwall|challenge|captcha|999/i.test(String(res?.final_url || '')) || (!html && res?.status !== 200);
-        const name = extractCompanyNameFromHtml(html);
-        return {
-            reachable: Boolean(html) && !blocked,
-            blocked,
-            html,
-            name: isUsableCompanyName(name) ? name : '',
-            meta: extractCompanyMetaFromHtml(html),
-        };
-    } catch {
+    let directResult = null;
+    if (vpsReady()) {
+        const sessionId = `cbd_${randomUUID().replace(/-/g, '')}`;
+        try {
+            const res = await tlsFetch({
+                url,
+                sessionId,
+                proxy: proxyUrl,
+                headers: { 'Accept-Language': 'en-US,en;q=0.9' },
+                timeout: 20,
+            });
+            const html = res?.body ?? res?.html ?? res?.content ?? '';
+            const blocked = /authwall|challenge|captcha|999/i.test(String(res?.final_url || '')) || (!html && res?.status !== 200);
+            const usableHtml = Boolean(html) && !blocked;
+            const name = extractCompanyNameFromHtml(html);
+            if (usableHtml || res?.status) {
+                const out = {
+                    reachable: usableHtml,
+                    blocked,
+                    html,
+                    name: isUsableCompanyName(name) ? name : '',
+                    meta: extractCompanyMetaFromHtml(html),
+                };
+                if (usableHtml) return out;
+                directResult = null;
+            }
+        } catch { /* fall through to render */ }
+        finally {
+            try { const { deleteSession } = await import('../vps-client.js'); await deleteSession(sessionId); } catch { /* pool reaps anyway */ }
+        }
         try {
             const rendered = await crawlPage({ url, proxy: proxyUrl, timeout: 40 });
             const html = rendered?.html || rendered?.body || '';
             const name = extractCompanyNameFromHtml(html);
-            return {
-                reachable: Boolean(html),
-                blocked: !html,
-                html,
-                name: isUsableCompanyName(name) ? name : '',
-                meta: extractCompanyMetaFromHtml(html),
-            };
-        } catch {
-            return { reachable: false, blocked: true, html: '', name: '', meta: {} };
-        }
-    } finally {
-        const { deleteSession } = await import('../vps-client.js');
-        try { await deleteSession(sessionId); } catch { /* pool reaps anyway */ }
+            if (html) {
+                return {
+                    reachable: true,
+                    blocked: false,
+                    html,
+                    name: isUsableCompanyName(name) ? name : '',
+                    meta: extractCompanyMetaFromHtml(html),
+                };
+            }
+        } catch { /* fall through to direct */ }
     }
+
+    // Apify-native lane: plain fetch through the residential session.
+    directResult = await directResidentialFetch({ url, proxyUrl });
+    const name = extractCompanyNameFromHtml(directResult.html);
+    return {
+        reachable: directResult.reachable,
+        blocked: directResult.blocked,
+        html: directResult.html,
+        name: isUsableCompanyName(name) ? name : '',
+        meta: extractCompanyMetaFromHtml(directResult.html),
+    };
 }
