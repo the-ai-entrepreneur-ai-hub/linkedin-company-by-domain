@@ -1,0 +1,19 @@
+{
+  "name": "linkedin-company-by-domain",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Find the LinkedIn Company Page for any website domain - with verified matching. No login.",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "apify": "^3.4.2",
+    "crawlee": "^3.13.8",
+    "undici": "^6.19.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "george.the.developer"
+}

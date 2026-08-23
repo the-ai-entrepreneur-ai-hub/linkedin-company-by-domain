@@ -1,0 +1,82 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-company-by-domain",
+    "title": "LinkedIn Company by Domain - Verified Finder API",
+    "description": "Find the LinkedIn company page for any website domain. Resolve LinkedIn company by domain with verified matching: a row bills only when the site and the LinkedIn page agree. Employee count, followers, free 30-day cache, free monitoring diffs. Batch up to 50,000 domains. No login.",
+    "seoTitle": "Domain to LinkedIn Company Finder - Verified API",
+    "seoDescription": "Resolve any website domain to its verified LinkedIn company page. LinkedIn company by domain finder API. Mutual-evidence matching, batch up to 50k domains. No cookies.",
+    "categories": [
+        "LEAD_GENERATION",
+        "AI"
+    ],
+    "version": "0.1",
+    "buildTag": "beta",
+    "environmentVariables": {
+        "VPS_URL": "@VPS_URL",
+        "VPS_API_KEY": "@VPS_API_KEY"
+    },
+    "dockerfile": "../Dockerfile",
+    "input": "./input_schema.json",
+    "readme": "../README.md",
+    "pricingPerEvent": {
+        "actorChargeEvents": {
+            "actor-start": {
+                "eventTitle": "Actor start",
+                "eventDescription": "One-time fee charged when the run begins.",
+                "eventPriceUsd": 0.002
+            },
+            "company-resolved": {
+                "eventTitle": "Verified company resolved",
+                "eventDescription": "Charged only for a domain resolved to its LinkedIn company page at medium or high confidence. Unresolved domains are free.",
+                "eventPriceUsd": 0.0075
+            }
+        }
+    },
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600,
+        "maxTotalChargeUsd": 25
+    },
+    "minItemMaxChargeUsd": 0.0075,
+    "storages": {
+        "dataset": {
+            "actorSpecification": 1,
+            "title": "Resolved Companies",
+            "views": {
+                "overview": {
+                    "title": "Overview",
+                    "transformation": {
+                        "fields": [
+                            "domain",
+                            "companyName",
+                            "linkedinUrl",
+                            "confidence",
+                            "method",
+                            "employeeCount",
+                            "followers",
+                            "location",
+                            "cached",
+                            "charged"
+                        ]
+                    },
+                    "display": {
+                        "component": "table",
+                        "properties": {
+                            "domain": { "label": "Domain", "format": "text" },
+                            "companyName": { "label": "Company", "format": "text" },
+                            "linkedinUrl": { "label": "LinkedIn URL", "format": "link" },
+                            "confidence": { "label": "Confidence", "format": "text" },
+                            "method": { "label": "Method", "format": "text" },
+                            "employeeCount": { "label": "Employees", "format": "number" },
+                            "followers": { "label": "Followers", "format": "number" },
+                            "location": { "label": "Location", "format": "text" },
+                            "cached": { "label": "Cached", "format": "boolean" },
+                            "charged": { "label": "Charged", "format": "boolean" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

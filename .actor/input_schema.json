@@ -1,0 +1,100 @@
+{
+    "title": "LinkedIn Company Finder by Domain - Input",
+    "description": "Resolve website domains to verified LinkedIn company pages",
+    "type": "object",
+    "schemaVersion": 1,
+    "required": [
+        "domains"
+    ],
+    "properties": {
+        "domains": {
+            "title": "Website Domains",
+            "type": "array",
+            "description": "Websites to resolve, with or without protocol/paths (e.g. stripe.com, https://www.vercel.com/about). Duplicates are collapsed automatically. Maximum 50,000 per run.",
+            "editor": "stringList",
+            "prefill": [
+                "stripe.com",
+                "vercel.com",
+                "gitlab.com"
+            ],
+            "maxItems": 50000
+        },
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "resolve: find each domain's LinkedIn page once. monitor: same, then diff against your previous run (new companies, headcount and name changes) for free. Monitoring snapshots live in a named key-value store in your account.",
+            "editor": "select",
+            "enum": [
+                "resolve",
+                "monitor"
+            ],
+            "enumTitles": [
+                "Resolve ($7.50 per 1,000 verified rows)",
+                "Monitor + free change diff"
+            ],
+            "default": "resolve"
+        },
+        "monitorBatchId": {
+            "title": "Monitor Batch ID",
+            "type": "string",
+            "description": "Named group of domains to monitor together when mode is 'monitor' (e.g. 'prospects-q4'). Runs with the same batch id diff against each other.",
+            "editor": "textfield",
+            "default": "default"
+        },
+        "forceRefresh": {
+            "title": "Force Refresh",
+            "type": "boolean",
+            "description": "Ignore the resolution cache and re-resolve every domain. Cached resolutions from the last 30 days are normally returned instantly and free of charge.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "cacheTtlDays": {
+            "title": "Cache TTL (days)",
+            "type": "integer",
+            "description": "How long a resolved mapping is reused before it is refreshed automatically.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 180,
+            "default": 30
+        },
+        "includeUnresolved": {
+            "title": "Include Unresolved Domains",
+            "type": "boolean",
+            "description": "Emit one row per unresolved domain (confidence=low, charged $0) so you can see coverage. Turn off to receive only billed rows.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "maxDomains": {
+            "title": "Max Domains Per Run",
+            "type": "integer",
+            "description": "Hard cap on domains processed in this run. Split larger lists into multiple runs.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 50000,
+            "default": 1000
+        },
+        "concurrency": {
+            "title": "Concurrency",
+            "type": "integer",
+            "description": "Domains processed in parallel. Higher is faster; above 25 some sites start rate-limiting.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 10
+        },
+        "useVpsRender": {
+            "title": "Use VPS Rendering Lane",
+            "type": "boolean",
+            "description": "Allow the optional VPS lane (JavaScript-rendered pages and persistent cache). The actor works fully without it; this only adds coverage for SPA homepages.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "proxyConfiguration": {
+            "title": "Proxy Configuration",
+            "type": "object",
+            "description": "Optional. Uses Apify Proxy automatically (GOOGLE_SERP + RESIDENTIAL groups). Override only if you have a specific requirement.",
+            "editor": "proxy",
+            "prefill": { "useApifyProxy": true }
+        }
+    }
+}
