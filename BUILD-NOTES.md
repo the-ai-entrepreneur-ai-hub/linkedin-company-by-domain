@@ -1,6 +1,9 @@
 # BUILD NOTES — linkedin-company-by-domain v0.1 (2026-08-23)
 
-Status: **code complete, 55/55 tests green, free rungs live-verified. NOT yet pushed to Apify.**
+Status: **code complete, 55/55 tests green, free rungs live-verified, keyword pass applied, GitHub repo live. NOT yet pushed to the Apify Store.**
+
+- Repo: https://github.com/the-ai-entrepreneur-ai-hub/linkedin-company-by-domain (public, MIT, CI green)
+- Keyword pass (rules from tracking/KEYWORD-REACH-AUDIT-2026-08-15.md): title contains exact buyer phrase "linkedin company by domain" (48/63); slug = head term; seoTitle carries Google-only variant "Domain to LinkedIn Company Finder - Verified API" (48/60); description 280/300; seoDescription 167/200; river heat ~320 u30 = inside the 300–5,000 band; README 1,084 words with quick-start code, cost math, MCP block, related actors. No claims of email/standby/dedicated-MCP (honesty rule #3).
 
 ## What was built
 Five-rung resolution waterfall with verified-confidence billing, per the approved architecture:
