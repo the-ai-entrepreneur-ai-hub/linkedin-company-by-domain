@@ -1,6 +1,6 @@
 # LinkedIn Company by Domain - Verified Finder API
 
-[LinkedIn Company by Domain](https://apify.com/george.the.developer/linkedin-company-by-domain) is an Apify Actor that resolves any website domain to its official LinkedIn company page and returns the match with a verified confidence score, employee count and follower count, without logins, cookies or manual URL guessing.
+[LinkedIn Company by Domain](https://apify.com/george.the.developer/linkedin-company-by-domain?fpr=bbquoh) is an Apify Actor that resolves any website domain to its official LinkedIn company page and returns the match with a verified confidence score, employee count and follower count, without logins, cookies or manual URL guessing.
 
 > Every billed row carries mutual evidence. The domain's own website points at the LinkedIn page AND the page agrees back. Rows that cannot prove it are free.
 
@@ -77,7 +77,7 @@ Runnable copies live in [examples/](examples/).
 Honest limits, stated up front.
 
 - No email addresses. Email finding was measured against live B2B infrastructure and does not produce verifiable results at acceptable cost, so we do not sell unverifiable rows.
-- No individual employee profiles. This actor resolves companies. Use [our employees scraper](https://apify.com/george.the.developer/linkedin-company-employees-scraper) downstream on the linkedinUrl field.
+- No individual employee profiles. This actor resolves companies. Use [our employees scraper](https://apify.com/george.the.developer/linkedin-company-employees-scraper?fpr=bbquoh) downstream on the linkedinUrl field.
 - No social media URLs other than LinkedIn.
 - Low confidence guesses are labeled confidence low and charged $0. They are never silently mixed into billed rows.
 
@@ -165,12 +165,12 @@ The same domain resolved within the TTL window. Cached rows return instantly and
 
 ## Related actors
 
-- [LinkedIn Company Employees Scraper](https://apify.com/george.the.developer/linkedin-company-employees-scraper) feeds resolved linkedinUrls in and gets verified employee profiles out.
-- [LinkedIn Post Engagers Scraper](https://apify.com/george.the.developer/linkedin-post-engagers-scraper) turns post reactions and comments into ICP matched leads.
+- [LinkedIn Company Employees Scraper](https://apify.com/george.the.developer/linkedin-company-employees-scraper?fpr=bbquoh) feeds resolved linkedinUrls in and gets verified employee profiles out.
+- [LinkedIn Post Engagers Scraper](https://apify.com/george.the.developer/linkedin-post-engagers-scraper?fpr=bbquoh) turns post reactions and comments into ICP matched leads.
 
 ## License
 
-MIT, see [LICENSE](LICENSE). The hosted actor on the [Apify Store](https://apify.com/george.the.developer/linkedin-company-by-domain) is the supported, managed way to run this.
+MIT, see [LICENSE](LICENSE). The hosted actor on the [Apify Store](https://apify.com/george.the.developer/linkedin-company-by-domain?fpr=bbquoh) is the supported, managed way to run this.
 
 ## Support
 
